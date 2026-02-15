@@ -25,6 +25,7 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
     if (!email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
@@ -33,10 +34,11 @@ export default function RegisterPage() {
       setError("Passwords do not match.");
       return;
     }
+
     try {
-      await register(email, password);
-    } catch {
-      setError("Registration failed. Please try again.");
+      await register(email, password, confirmPassword);
+    } catch (err: any) {
+      setError(err?.message || "Registration failed. Please try again.");
     }
   }
 
@@ -59,6 +61,7 @@ export default function RegisterPage() {
                 {error}
               </div>
             )}
+
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -70,6 +73,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
               />
             </div>
+
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -81,6 +85,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
               />
             </div>
+
             <div className="flex flex-col gap-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
@@ -92,6 +97,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
               />
             </div>
+
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
@@ -102,6 +108,7 @@ export default function RegisterPage() {
                 "Create account"
               )}
             </Button>
+
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link

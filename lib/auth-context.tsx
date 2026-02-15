@@ -1,72 +1,116 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
-import { User, Role } from "./types"
-import { mockCurrentUser } from "./mock-data"
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import type { User } from "./types";
+
+type AuthResponse = { token: string };
 
 interface AuthContextType {
-  user: User | null
-  isLoading: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string) => Promise<void>
-  logout: () => void
+  user: User | null;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    confirmPassword: string,
+  ) => Promise<void>;
+  logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const AuthContext = createContext<AuthContextType | null>(null);
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+const TOKEN_KEY = "ACCESS_TOKEN";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(mockCurrentUser)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const fetchMe = useCallback(async (token: string) => {
+    const meRes = await fetch(`${BASE_URL}/api/auth/me`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
+    });
+    if (!meRes.ok) throw new Error("Failed to load profile");
+    const me = (await meRes.json()) as User;
+    setUser(me);
+  }, []);
 
   const login = useCallback(
-    async (email: string, _password: string) => {
-      setIsLoading(true)
-      // Simulate API call
-      await new Promise((r) => setTimeout(r, 1000))
-      setUser({
-        ...mockCurrentUser,
-        email,
-        role: email.includes("admin") ? ("ADMIN" as Role) : ("USER" as Role),
-      })
-      setIsLoading(false)
-      router.push("/dashboard")
+    async (email: string, password: string) => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || "Invalid email or password");
+        }
+
+        const data = (await res.json()) as AuthResponse;
+        sessionStorage.setItem(TOKEN_KEY, data.token);
+
+        await fetchMe(data.token);
+        router.push("/dashboard");
+      } finally {
+        setIsLoading(false);
+      }
     },
-    [router]
-  )
+    [router, fetchMe],
+  );
 
   const register = useCallback(
-    async (email: string, _password: string) => {
-      setIsLoading(true)
-      await new Promise((r) => setTimeout(r, 1000))
-      setUser({
-        ...mockCurrentUser,
-        email,
-        role: "USER",
-      })
-      setIsLoading(false)
-      router.push("/dashboard")
+    async (email: string, password: string, confirmPassword: string) => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, confirmPassword }), // ✅ REQUIRED
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || "Registration failed");
+        }
+
+        const data = (await res.json()) as AuthResponse;
+        sessionStorage.setItem(TOKEN_KEY, data.token);
+
+        await fetchMe(data.token);
+        router.push("/dashboard");
+      } finally {
+        setIsLoading(false);
+      }
     },
-    [router]
-  )
+    [router, fetchMe],
+  );
 
   const logout = useCallback(() => {
-    setUser(null)
-    router.push("/login")
-  }, [router])
+    sessionStorage.removeItem(TOKEN_KEY);
+    setUser(null);
+    router.push("/login");
+  }, [router]);
 
   return (
     <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider")
-  }
-  return context
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  return context;
 }
