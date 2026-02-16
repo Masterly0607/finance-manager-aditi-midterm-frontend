@@ -1,33 +1,26 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { User } from "./types";
+import type { User } from "@/lib/types";
 
 type AuthResponse = { token: string };
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (
     email: string,
     password: string,
-    confirmPassword: string,
+    confirmPassword: string
   ) => Promise<void>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 const TOKEN_KEY = "ACCESS_TOKEN";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -48,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(me);
   }, []);
 
-  //  Restore user after refresh using token in sessionStorage
+  // Restore user after refresh using token in sessionStorage
   useEffect(() => {
     const token = sessionStorage.getItem(TOKEN_KEY);
     if (!token) return;
@@ -56,7 +49,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     fetchMe(token)
       .catch(() => {
-        // token invalid/expired -> clear it
         sessionStorage.removeItem(TOKEN_KEY);
         setUser(null);
       })
@@ -81,19 +73,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const data = (await res.json()) as AuthResponse;
 
-        //  save token
         sessionStorage.setItem(TOKEN_KEY, data.token);
-
-        // load user profile
         await fetchMe(data.token);
 
-        // go dashboard
         router.replace("/dashboard");
       } finally {
         setIsLoading(false);
       }
     },
-    [router, fetchMe],
+    [router, fetchMe]
   );
 
   const register = useCallback(
@@ -114,19 +102,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const data = (await res.json()) as AuthResponse;
 
-        // save token
         sessionStorage.setItem(TOKEN_KEY, data.token);
-
-        // load user profile
         await fetchMe(data.token);
 
-        // go dashboard
         router.replace("/dashboard");
       } finally {
         setIsLoading(false);
       }
     },
-    [router, fetchMe],
+    [router, fetchMe]
   );
 
   const logout = useCallback(() => {
@@ -140,10 +124,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
-  return context;
 }

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useAuth } from "@/lib/auth-context"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   Wallet,
@@ -23,24 +23,26 @@ import {
   Users,
   ListChecks,
   DollarSign,
-} from "lucide-react"
+} from "lucide-react";
+import { useAuth } from "@/lib/hooks/useAuth";
+
 
 const mainNavItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Accounts", href: "/accounts", icon: Wallet },
   { title: "Transactions", href: "/transactions", icon: ListChecks },
   { title: "Transfer", href: "/transfer", icon: ArrowRightLeft },
-]
+];
 
 const adminNavItems = [
   { title: "Users", href: "/admin/users", icon: Users },
   { title: "Transactions", href: "/admin/transactions", icon: ArrowLeftRight },
-]
+];
 
 export function AppSidebar() {
-  const pathname = usePathname()
-  const { user } = useAuth()
-  const isAdmin = user?.role === "ADMIN"
+  const pathname = usePathname();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <Sidebar collapsible="icon">
@@ -110,5 +112,5 @@ export function AppSidebar() {
         )}
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
