@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "./types";
 
@@ -35,10 +41,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       headers: { Authorization: `Bearer ${token}` },
       credentials: "include",
     });
+
     if (!meRes.ok) throw new Error("Failed to load profile");
+
     const me = (await meRes.json()) as User;
     setUser(me);
   }, []);
+
+  //  Restore user after refresh using token in sessionStorage
+  useEffect(() => {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (!token) return;
+
+    setIsLoading(true);
+    fetchMe(token)
+      .catch(() => {
+        // token invalid/expired -> clear it
+        sessionStorage.removeItem(TOKEN_KEY);
+        setUser(null);
+      })
+      .finally(() => setIsLoading(false));
+  }, [fetchMe]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -57,10 +80,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         const data = (await res.json()) as AuthResponse;
+
+        //  save token
         sessionStorage.setItem(TOKEN_KEY, data.token);
 
+        // load user profile
         await fetchMe(data.token);
-        router.push("/dashboard");
+
+        // go dashboard
+        router.replace("/dashboard");
       } finally {
         setIsLoading(false);
       }
@@ -75,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch(`${BASE_URL}/api/auth/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, confirmPassword }), //  REQUIRED
+          body: JSON.stringify({ email, password, confirmPassword }),
           credentials: "include",
         });
 
@@ -85,10 +113,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         const data = (await res.json()) as AuthResponse;
+
+        // save token
         sessionStorage.setItem(TOKEN_KEY, data.token);
 
+        // load user profile
         await fetchMe(data.token);
-        router.push("/dashboard");
+
+        // go dashboard
+        router.replace("/dashboard");
       } finally {
         setIsLoading(false);
       }
@@ -99,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     sessionStorage.removeItem(TOKEN_KEY);
     setUser(null);
-    router.push("/login");
+    router.replace("/login");
   }, [router]);
 
   return (
