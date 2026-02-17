@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@/lib/types";
 
@@ -19,7 +13,7 @@ export interface AuthContextType {
   register: (
     email: string,
     password: string,
-    confirmPassword: string,
+    confirmPassword: string
   ) => Promise<void>;
   logout: () => void;
 }
