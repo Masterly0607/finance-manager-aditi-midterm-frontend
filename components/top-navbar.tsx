@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useAuth } from "@/lib/auth-context"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { LogOut } from "lucide-react"
+import { useAuth } from "@/lib/auth-context";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { LogOut } from "lucide-react";
 
 export function TopNavbar() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
@@ -19,10 +19,7 @@ export function TopNavbar() {
         <div className="flex items-center gap-3">
           <div className="hidden items-center gap-2 sm:flex">
             <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Badge
-              variant={user?.role === "ADMIN" ? "default" : "secondary"}
-              className="text-xs"
-            >
+            <Badge variant={user?.role === "ADMIN" ? "default" : "secondary"} className="text-xs">
               {user?.role}
             </Badge>
           </div>
@@ -33,5 +30,5 @@ export function TopNavbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

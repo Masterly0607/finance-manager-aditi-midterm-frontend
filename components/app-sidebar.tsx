@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useAuth } from "@/lib/auth-context"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   Wallet,
@@ -23,24 +23,24 @@ import {
   Users,
   ListChecks,
   DollarSign,
-} from "lucide-react"
+} from "lucide-react";
 
 const mainNavItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Accounts", href: "/accounts", icon: Wallet },
   { title: "Transactions", href: "/transactions", icon: ListChecks },
   { title: "Transfer", href: "/transfer", icon: ArrowRightLeft },
-]
+];
 
 const adminNavItems = [
   { title: "Users", href: "/admin/users", icon: Users },
   { title: "Transactions", href: "/admin/transactions", icon: ArrowLeftRight },
-]
+];
 
 export function AppSidebar() {
-  const pathname = usePathname()
-  const { user } = useAuth()
-  const isAdmin = user?.role === "ADMIN"
+  const pathname = usePathname();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <Sidebar collapsible="icon">
@@ -57,18 +57,12 @@ export function AppSidebar() {
       <SidebarSeparator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-foreground/50">
-            Menu
-          </SidebarGroupLabel>
+          <SidebarGroupLabel className="text-sidebar-foreground/50">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
-                    tooltip={item.title}
-                  >
+                  <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title}>
                     <Link href={item.href}>
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
@@ -84,9 +78,7 @@ export function AppSidebar() {
           <>
             <SidebarSeparator />
             <SidebarGroup>
-              <SidebarGroupLabel className="text-sidebar-foreground/50">
-                Admin
-              </SidebarGroupLabel>
+              <SidebarGroupLabel className="text-sidebar-foreground/50">Admin</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {adminNavItems.map((item) => (
@@ -110,5 +102,5 @@ export function AppSidebar() {
         )}
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

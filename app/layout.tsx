@@ -9,8 +9,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Finance Manager",
-  description:
-    "Personal Finance Manager - Track your income, expenses, and transfers",
+  description: "Personal Finance Manager - Track your income, expenses, and transfers",
 };
 
 export default function RootLayout({
