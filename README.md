@@ -1,36 +1,195 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💰 Personal Finance Manager -- Frontend
 
-## Getting Started
+## 📌 Overview
 
-First, run the development server:
+This is the **Frontend Application** for the Personal Finance Manager
+system.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+It is built using:
+
+-   Next.js 14 (App Router)
+-   TypeScript
+-   Tailwind CSS
+-   shadcn/ui
+-   JWT Authentication
+-   Context API for Auth State
+
+This frontend connects securely to the Spring Boot backend using
+JWT-based authentication.
+
+The system allows users to manage personal finances, including accounts,
+transactions, transfers, and administrative monitoring.
+
+------------------------------------------------------------------------
+
+# 🎯 Project Objectives
+
+-   Build a modern financial dashboard UI
+-   Connect securely with backend REST APIs
+-   Implement JWT authentication
+-   Apply role-based UI rendering (USER / ADMIN)
+-   Provide clear financial visualization
+
+------------------------------------------------------------------------
+
+# 🏗️ Application Structure
+
+## 📁 Folder Structure
+
+    app/
+     ├── (auth)/
+     │    ├── login/
+     │    └── register/
+     │
+     ├── (app)/
+     │    ├── dashboard/
+     │    ├── accounts/
+     │    ├── transactions/
+     │    ├── transfer/
+     │    └── admin/
+     │         └── users/
+     │
+     ├── layout.tsx
+     └── globals.css
+
+    components/
+     ├── ui/
+     ├── app-sidebar.tsx
+     ├── top-navbar.tsx
+     ├── summary-cards.tsx
+     ├── monthly-chart.tsx
+     └── transaction-table.tsx
+
+    lib/
+     ├── auth-context.tsx
+     ├── api.ts
+     └── types.ts
+
+------------------------------------------------------------------------
+
+# 🔐 Authentication
+
+-   User Registration
+-   User Login
+-   JWT Access Token stored in client
+-   Refresh token handled by backend
+-   Protected routes
+-   Role-based UI (ADMIN panel visible only for admins)
+
+------------------------------------------------------------------------
+
+# 📊 Core Features
+
+## 👤 User
+
+-   Register / Login
+-   View Dashboard
+-   Create Accounts
+-   Add Income / Expense
+-   Transfer Between Accounts
+-   View Monthly Summary Chart
+
+## 👑 Admin
+
+-   View All Users
+-   Toggle User Role (USER ↔ ADMIN)
+-   Monitor Transactions
+
+------------------------------------------------------------------------
+
+---
+
+## 👥 Task Division
+
+This project was developed as a team assignment.
+
+### ✅ Responsibilities
+
+| Member | Area | What they built |
+|---|---|---|
+| **Masterly** | Authentication | Login, Register, JWT handling, Route protection |
+| **Raksa** | Accounts | Create account, View list, Update account |
+| **Chhai** | Transactions & Transfers | Income/Expense CRUD, Transfer between accounts |
+| **Narin** | Admin Panel | View users, Toggle role (USER ↔ ADMIN), Monitor transactions |
+
+---
+
+# 🔌 API Integration
+
+The frontend communicates with the backend using a centralized API
+helper:
+
+``` ts
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+All authenticated requests include:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    Authorization: Bearer <access_token>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+------------------------------------------------------------------------
 
-## Learn More
+# 🎨 UI & Design
 
-To learn more about Next.js, take a look at the following resources:
+-   Sidebar layout for dashboard
+-   Responsive design
+-   Financial summary cards
+-   Monthly income vs expense chart
+-   Transaction table with status badges
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+------------------------------------------------------------------------
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 🚀 Running the Project
 
-## Deploy on Vercel
+## 1️⃣ Install dependencies
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+``` bash
+npm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 2️⃣ Configure environment
+
+Create `.env.local`
+
+    NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+
+## 3️⃣ Start development server
+
+``` bash
+npm run dev
+```
+
+Frontend runs on:
+
+    http://localhost:3000
+
+------------------------------------------------------------------------
+
+# 🔐 Security Notes
+
+-   JWT-based authentication
+-   Role-based UI protection
+-   Sensitive logic handled in backend
+-   Academic project (no real money transactions)
+
+------------------------------------------------------------------------
+
+# 📚 Academic Context
+
+This project was developed for:
+
+Aditi Academy -- Midterm Assessment
+
+Focus Areas: - Full-stack integration - Secure authentication -
+Role-based access control - Clean architecture - UI/UX best practices
+
+------------------------------------------------------------------------
+
+# 👨‍💻 Authors
+
+Developed by:
+
+-   Masterly
+-   Raksa
+-   Chhai
+-   Narin
