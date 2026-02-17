@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { useAuth } from "@/lib/auth-context";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { LogOut } from "lucide-react";
+import { useAuth } from "@/lib/auth-context"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { LogOut } from "lucide-react"
 
 export function TopNavbar() {
   const { user, logout } = useAuth();
@@ -15,7 +15,9 @@ export function TopNavbar() {
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 h-4" />
       <div className="flex flex-1 items-center justify-between">
-        <h2 className="text-sm font-semibold text-foreground md:text-base">Finance Manager</h2>
+        <h2 className="text-sm font-semibold text-foreground md:text-base">
+          Finance Manager
+        </h2>
         <div className="flex items-center gap-3">
           <div className="hidden items-center gap-2 sm:flex">
             <span className="text-sm text-muted-foreground">{user?.email}</span>

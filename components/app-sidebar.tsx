@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +23,7 @@ import {
   Users,
   ListChecks,
   DollarSign,
-} from "lucide-react";
+} from "lucide-react"
 
 const mainNavItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
