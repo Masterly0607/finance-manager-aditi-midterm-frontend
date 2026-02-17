@@ -2,9 +2,9 @@ name: CI/CD pipeline
 
 on:
   pull_request:
-    branches: [main]
+    branches: ["**"]
   push:
-    branches: [main]
+    branches: ["**"]
   workflow_dispatch:
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
   deploy:
     needs: ci
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/transaction' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repository
