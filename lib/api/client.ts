@@ -1,4 +1,22 @@
-// lib/api.ts
+// Network layer
+/*
+Main Goal of This File
+
+This file creates a reusable API function that:
+
+✅ Connects frontend to backend
+
+✅ Automatically attaches JWT token
+
+✅ Handles errors
+
+✅ Handles JSON response
+
+✅ Sends cookies (refresh token)
+
+Instead of writing fetch() everywhere, you write it once here and reuse it everywhere.
+
+*/
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function api<T>(

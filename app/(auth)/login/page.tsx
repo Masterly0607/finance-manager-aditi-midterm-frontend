@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DollarSign, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function LoginPage() {
   const { login, isLoading } = useAuth();
