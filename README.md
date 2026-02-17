@@ -190,6 +190,6 @@ Role-based access control - Clean architecture - UI/UX best practices
 Developed by:
 
 -   Masterly
--   Raksa
+-   Reaksa
 -   Chhai
 -   Narin
