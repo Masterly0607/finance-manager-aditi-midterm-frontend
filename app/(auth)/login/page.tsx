@@ -17,10 +17,12 @@ import { DollarSign, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/hooks/useAuth";
 
+
+
 export default function LoginPage() {
   const { login, isLoading } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin1@gmail.com");
+  const [password, setPassword] = useState("adminpass1");
   const [error, setError] = useState("");
   const router = useRouter();
 
