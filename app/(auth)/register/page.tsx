@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DollarSign, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function RegisterPage() {
   const { register, isLoading } = useAuth();
@@ -21,7 +23,12 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("ACCESS_TOKEN");
+    if (token) router.replace("/dashboard");
+  }, [router]);
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
