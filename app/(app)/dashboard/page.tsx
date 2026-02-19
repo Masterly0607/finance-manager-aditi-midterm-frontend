@@ -2,7 +2,7 @@ import { MonthlyChart } from "@/components/monthly-chart";
 import { SummaryCards } from "@/components/summary-cards";
 import { TransactionTable } from "@/components/transaction-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDashboardSummary, mockMonthlySummary, mockTransactions } from "@/lib/mock-data";
+import { getDashboardSummary, mockMonthlySummary, mockTransactions } from "@/lib/mock/mock-data";
 
 import React from "react";
 
