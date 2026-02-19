@@ -1,6 +1,10 @@
 // lib/api.ts
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+if (!BASE_URL) {
+  throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
+}
+
 export async function api<T>(
   path: string,
   options: RequestInit = {},
@@ -24,3 +28,4 @@ export async function api<T>(
   if (res.status === 204) return undefined as T;
   return res.json();
 }
+
