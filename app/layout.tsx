@@ -1,26 +1,21 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Providers } from "./providers";
 
-import "./globals.css";
-import { AuthProvider } from "@/lib/auth/AuthProvider";
-
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const geist = Geist({ subsets: ["latin"] });
+const geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Finance Manager",
   description: "Personal Finance Manager - Track your income, expenses, and transfers",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`${geist.className} antialiased`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
