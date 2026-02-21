@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/hooks/useAuth";
 
-
 const mainNavItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Accounts", href: "/accounts", icon: Wallet },

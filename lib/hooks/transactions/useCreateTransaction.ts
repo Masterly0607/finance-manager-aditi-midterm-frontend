@@ -10,9 +10,7 @@ export function useCreateTransaction() {
       const token = sessionStorage.getItem("ACCESS_TOKEN");
 
       const endpoint =
-        newTxn.type === "INCOME"
-          ? "/api/transactions/income"
-          : "/api/transactions/expense";
+        newTxn.type === "INCOME" ? "/api/transactions/income" : "/api/transactions/expense";
 
       const body = {
         amount: newTxn.amount,
@@ -27,7 +25,7 @@ export function useCreateTransaction() {
           method: "POST",
           body: JSON.stringify(body),
         },
-        token
+        token,
       );
     },
 

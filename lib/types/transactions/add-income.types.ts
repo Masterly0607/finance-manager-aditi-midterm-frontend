@@ -17,12 +17,7 @@ export type Props = {
 export interface AddIncomeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: {
-    accountId: string;
-    amount: number;
-    note: string;
-    date: string;
-  }) => void;
+  onSubmit: (data: { accountId: string; amount: number; note: string; date: string }) => void;
   accounts: {
     id: string;
     name: string;

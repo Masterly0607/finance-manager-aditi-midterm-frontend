@@ -11,14 +11,7 @@ import { Account } from "../../types/account.types";
 
 export function useTransactions(query: TransactionsQuery) {
   return useQuery<{ transactions: Transaction[]; pagination: Pagination }, Error>({
-    queryKey: [
-      "transactions",
-      query.account,
-      query.type,
-      query.search,
-      query.page,
-      query.pageSize,
-    ],
+    queryKey: ["transactions", query.account, query.type, query.search, query.page, query.pageSize],
     queryFn: async () => {
       const page = query.page ?? 0;
       const pageSize = query.pageSize ?? 8;
@@ -40,17 +33,11 @@ export function useTransactions(query: TransactionsQuery) {
       }
 
       const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const token =
-        typeof window !== "undefined"
-          ? sessionStorage.getItem("ACCESS_TOKEN")
-          : null;
+      const token = typeof window !== "undefined" ? sessionStorage.getItem("ACCESS_TOKEN") : null;
 
-      const res = await fetch(
-        `${BASE_URL}/api/transactions?${params.toString()}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        }
-      );
+      const res = await fetch(`${BASE_URL}/api/transactions?${params.toString()}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
 
       const json: TransactionsApiResponse = await res.json();
 
