@@ -10,11 +10,7 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    email: string,
-    password: string,
-    confirmPassword: string
-  ) => Promise<void>;
+  register: (email: string, password: string, confirmPassword: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -81,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       }
     },
-    [router, fetchMe]
+    [router, fetchMe],
   );
 
   const register = useCallback(
@@ -110,7 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       }
     },
-    [router, fetchMe]
+    [router, fetchMe],
   );
 
   const logout = useCallback(() => {
