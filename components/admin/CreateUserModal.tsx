@@ -72,7 +72,7 @@ export function CreateUserModal({ onUserCreated }: CreateUserModalProps) {
           body: JSON.stringify(values),
         },
         accessToken,
-      );
+      ) as { success: boolean; message?: string };
 
       if (response.success) {
         toast?.({ title: "Success", description: "User created successfully" });
@@ -171,7 +171,7 @@ export function CreateUserModal({ onUserCreated }: CreateUserModalProps) {
                     <input
                       type="checkbox"
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onChange={(e) => field.onChange(e.target.checked)}
                       className="h-4 w-4 rounded border-gray-300"
                     />
                   </FormControl>
