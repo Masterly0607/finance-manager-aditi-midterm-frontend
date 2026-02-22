@@ -65,14 +65,14 @@ export function CreateUserModal({ onUserCreated }: CreateUserModalProps) {
 
   async function onSubmit(values: FormValues) {
     try {
-      const response = await api(
+      const response = (await api(
         "/api/admin/users",
         {
           method: "POST",
           body: JSON.stringify(values),
         },
         accessToken,
-      ) as { success: boolean; message?: string };
+      )) as { success: boolean; message?: string };
 
       if (response.success) {
         toast?.({ title: "Success", description: "User created successfully" });

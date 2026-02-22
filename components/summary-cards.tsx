@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DollarSign, TrendingUp, TrendingDown, Activity } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign, TrendingUp, TrendingDown, Activity } from "lucide-react";
 
 interface SummaryData {
-  totalBalance: number
-  monthIncome: number
-  monthExpense: number
-  net: number
+  totalBalance: number;
+  monthIncome: number;
+  monthExpense: number;
+  net: number;
 }
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(value)
+  }).format(value);
 }
 
 const cards = [
@@ -46,7 +46,7 @@ const cards = [
     color: "text-primary",
     bg: "bg-primary/10",
   },
-]
+];
 
 export function SummaryCards({ data }: { data: SummaryData }) {
   return (
@@ -57,17 +57,17 @@ export function SummaryCards({ data }: { data: SummaryData }) {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {card.title}
             </CardTitle>
-            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${card.bg}`}>
+            <div
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${card.bg}`}
+            >
               <card.icon className={`h-4 w-4 ${card.color}`} />
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-foreground">
-              {formatCurrency(data[card.key])}
-            </p>
+            <p className="text-2xl font-bold text-foreground">{formatCurrency(data[card.key])}</p>
           </CardContent>
         </Card>
       ))}
     </div>
-  )
+  );
 }
