@@ -1,10 +1,9 @@
-// src/components/AdminUserList.tsx
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback } from 'react';
-import { api } from '@/lib/api/client';
-import { ChevronUp, ChevronDown, UserCog } from 'lucide-react';
-import { CreateUserModal } from '@/components/admin/CreateUserModal';
+import { useEffect, useState, useCallback } from "react";
+import { api } from "@/lib/api/client";
+import { ChevronUp, ChevronDown, UserCog } from "lucide-react";
+import { CreateUserModal } from "@/components/admin/CreateUserModal";
 
 import {
   Pagination,
@@ -14,30 +13,30 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
+} from "@/components/ui/pagination";
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface User {
   id: number;
   email: string;
-  role: 'USER' | 'ADMIN';
+  role: "USER" | "ADMIN";
   isActive: boolean;
   createdAt: string;
 }
 
 interface PaginationMeta {
-  page: number;           // 0-based
+  page: number; // 0-based
   size: number;
   totalElements: number;
   totalPages: number;
   last: boolean;
 }
 
-type RoleFilter = '' | 'USER' | 'ADMIN';
-type SortField = 'id' | 'email' | 'createdAt';
-type SortDirection = 'asc' | 'desc';
+type RoleFilter = "" | "USER" | "ADMIN";
+type SortField = "id" | "email" | "createdAt";
+type SortDirection = "asc" | "desc";
 
 export default function AdminUserList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -45,17 +44,16 @@ export default function AdminUserList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFiltering, setIsFiltering] = useState(false);
-  const[togglingStatusId, setTogglingStatusId] = useState<number | null>(null);
+  const [togglingStatusId, setTogglingStatusId] = useState<number | null>(null);
 
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>('');
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("");
   const [page, setPage] = useState(0);
-  const [sortBy, setSortBy] = useState<SortField>('createdAt');
-  const [sortDir, setSortDir] = useState<SortDirection>('desc');
+  const [sortBy, setSortBy] = useState<SortField>("createdAt");
+  const [sortDir, setSortDir] = useState<SortDirection>("desc");
 
   const [togglingId, setTogglingId] = useState<number | null>(null);
 
-  const accessToken =
-    typeof window !== 'undefined' ? sessionStorage.getItem('ACCESS_TOKEN') : null;
+  const accessToken = typeof window !== "undefined" ? sessionStorage.getItem("ACCESS_TOKEN") : null;
 
   const fetchUsers = useCallback(async () => {
     setIsFiltering(true);
@@ -65,16 +63,16 @@ export default function AdminUserList() {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        size: '10',
+        size: "10",
         sort: `${sortBy},${sortDir}`,
       });
 
       if (roleFilter) {
-        params.append('role', roleFilter);
+        params.append("role", roleFilter);
       }
 
       const query = params.toString();
-      const path = `/api/admin/users${query ? `?${query}` : ''}`;
+      const path = `/api/admin/users${query ? `?${query}` : ""}`;
 
       const result = await api<{
         success: boolean;
@@ -82,7 +80,7 @@ export default function AdminUserList() {
           data: User[];
         } & PaginationMeta;
         message?: string;
-      }>(path, { method: 'GET' }, accessToken);
+      }>(path, { method: "GET" }, accessToken);
 
       if (result.success && result.data) {
         setUsers(result.data.data);
@@ -94,11 +92,11 @@ export default function AdminUserList() {
           last: result.data.last,
         });
       } else {
-        setError(result.message || 'Failed to load users');
+        setError(result.message || "Failed to load users");
       }
     } catch (err: any) {
-      setError(err.message || 'Network error while fetching users');
-      console.error('Fetch users failed:', err);
+      setError(err.message || "Network error while fetching users");
+      console.error("Fetch users failed:", err);
     } finally {
       // setLoading(false);
       setIsFiltering(false);
@@ -114,8 +112,6 @@ export default function AdminUserList() {
     setPage(0);
   }, [roleFilter, sortBy, sortDir]);
 
-
-
   //===================== Toggle User Status =====================
   const toggleUserStatus = async (user: User) => {
     const userId = user.id;
@@ -123,9 +119,7 @@ export default function AdminUserList() {
 
     // Optimistic update
     setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId ? { ...u, isActive: !originalStatus } : u
-      )
+      prev.map((u) => (u.id === userId ? { ...u, isActive: !originalStatus } : u)),
     );
 
     setTogglingStatusId(userId);
@@ -133,24 +127,27 @@ export default function AdminUserList() {
     try {
       // PATCH request – assuming server toggles without body
       // If server expects body like { active: boolean }, add it: { body: JSON.stringify({ active: !originalStatus }) }
-      await api(`/api/admin/users/${userId}/status`, {
-        method: 'PATCH',
-      }, accessToken);
+      await api(
+        `/api/admin/users/${userId}/status`,
+        {
+          method: "PATCH",
+        },
+        accessToken,
+      );
 
       // Success → keep the optimistic change
     } catch (err: any) {
       // Rollback on error
       setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, isActive: originalStatus } : u))
+        prev.map((u) => (u.id === userId ? { ...u, isActive: originalStatus } : u)),
       );
 
       setError(`Failed to toggle status for ${user.email}`);
-      console.error('Toggle status failed:', err);
+      console.error("Toggle status failed:", err);
     } finally {
       setTogglingStatusId(null);
     }
   };
-
 
   //===================== Toggle User Role =====================
   const toggleUserRole = async (user: User) => {
@@ -160,26 +157,28 @@ export default function AdminUserList() {
     // Optimistic update
     setUsers((prev) =>
       prev.map((u) =>
-        u.id === userId ? { ...u, role: originalRole === 'ADMIN' ? 'USER' : 'ADMIN' } : u
-      )
+        u.id === userId ? { ...u, role: originalRole === "ADMIN" ? "USER" : "ADMIN" } : u,
+      ),
     );
 
     setTogglingId(userId);
 
     try {
-      await api(`/api/admin/users/${userId}/role`, {
-        method: 'PATCH',
-      }, accessToken);
+      await api(
+        `/api/admin/users/${userId}/role`,
+        {
+          method: "PATCH",
+        },
+        accessToken,
+      );
 
       // Success → keep optimistic change
     } catch (err: any) {
       // Rollback
-      setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, role: originalRole } : u))
-      );
+      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role: originalRole } : u)));
 
       setError(`Failed to toggle role for ${user.email}`);
-      console.error('Toggle role failed:', err);
+      console.error("Toggle role failed:", err);
     } finally {
       setTogglingId(null);
     }
@@ -188,16 +187,20 @@ export default function AdminUserList() {
   //===================== Sort =====================
   const toggleSort = (field: SortField) => {
     if (sortBy === field) {
-      setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+      setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy(field);
-      setSortDir('asc');
+      setSortDir("asc");
     }
   };
 
   const getSortIcon = (field: SortField) =>
     sortBy === field ? (
-      sortDir === 'asc' ? <ChevronUp className="ml-1 inline h-4 w-4" /> : <ChevronDown className="ml-1 inline h-4 w-4" />
+      sortDir === "asc" ? (
+        <ChevronUp className="ml-1 inline h-4 w-4" />
+      ) : (
+        <ChevronDown className="ml-1 inline h-4 w-4" />
+      )
     ) : null;
 
   const handlePageChange = (newPage: number) => {
@@ -206,12 +209,12 @@ export default function AdminUserList() {
   };
 
   const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    new Date(iso).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
 
   const getPageNumbers = () => {
@@ -256,12 +259,12 @@ export default function AdminUserList() {
           <CreateUserModal onUserCreated={fetchUsers} />
 
           {roleFilter && (
-            <Button variant="outline" size="sm" onClick={() => setRoleFilter('')}>
+            <Button variant="outline" size="sm" onClick={() => setRoleFilter("")}>
               Clear
             </Button>
           )}
         </div>
-      </div>  
+      </div>
 
       {/* Overlay loader – only when filtering/re-sorting */}
       {isFiltering && (
@@ -287,7 +290,7 @@ export default function AdminUserList() {
 
       {!loading && !error && users.length === 0 && (
         <div className="rounded-lg bg-gray-50 p-10 text-center text-gray-600 shadow-sm">
-          No users found {roleFilter ? `for role "${roleFilter}"` : 'in the system'}.
+          No users found {roleFilter ? `for role "${roleFilter}"` : "in the system"}.
         </div>
       )}
 
@@ -299,46 +302,52 @@ export default function AdminUserList() {
                 <tr>
                   <th
                     className="cursor-pointer px-6 py-4 text-left text-sm font-semibold text-gray-900 hover:bg-gray-100"
-                    onClick={() => toggleSort('id')}
+                    onClick={() => toggleSort("id")}
                   >
-                    ID {getSortIcon('id')}
+                    ID {getSortIcon("id")}
                   </th>
                   <th
                     className="cursor-pointer px-6 py-4 text-left text-sm font-semibold text-gray-900 hover:bg-gray-100"
-                    onClick={() => toggleSort('email')}
+                    onClick={() => toggleSort("email")}
                   >
-                    Email {getSortIcon('email')}
+                    Email {getSortIcon("email")}
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Role</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                    Status
+                  </th>
                   <th
                     className="cursor-pointer px-6 py-4 text-left text-sm font-semibold text-gray-900 hover:bg-gray-100"
-                    onClick={() => toggleSort('createdAt')}
+                    onClick={() => toggleSort("createdAt")}
                   >
-                    Created {getSortIcon('createdAt')}
+                    Created {getSortIcon("createdAt")}
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                    Actions
+                  </th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-200 bg-white">
                 {users.map((user) => {
                   const isToggling = togglingId === user.id;
-                  const nextRoleLabel = user.role === 'ADMIN' ? 'Make User' : 'Make Admin';
+                  const nextRoleLabel = user.role === "ADMIN" ? "Make User" : "Make Admin";
 
                   return (
                     <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{user.id}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                        {user.id}
+                      </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
                         {user.email}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         <span
                           className={cn(
-                            'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
-                            user.role === 'ADMIN'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-green-100 text-green-800'
+                            "inline-flex rounded-full px-3 py-1 text-xs font-semibold",
+                            user.role === "ADMIN"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-green-100 text-green-800",
                           )}
                         >
                           {user.role}
@@ -347,60 +356,60 @@ export default function AdminUserList() {
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         <span
                           className={cn(
-                            'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
+                            "inline-flex rounded-full px-3 py-1 text-xs font-semibold",
                             user.isActive
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-rose-100 text-rose-800'
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-rose-100 text-rose-800",
                           )}
                         >
-                          {user.isActive ? 'Active' : 'Inactive'}
+                          {user.isActive ? "Active" : "Inactive"}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
                         {formatDate(user.createdAt)}
                       </td>
-<td className="whitespace-nowrap px-6 py-4 text-sm flex items-center gap-3">
-  {/* Role Toggle */}
-  <Button
-    variant="outline"
-    size="sm"
-    onClick={() => toggleUserRole(user)}
-    disabled={togglingId === user.id || togglingStatusId === user.id}
-    className="min-w-[140px] gap-1.5"
-  >
-    {togglingId === user.id ? (
-      <>
-        <UserCog className="h-4 w-4 animate-spin" />
-        Updating…
-      </>
-    ) : (
-      <>
-        <UserCog className="h-4 w-4" />
-        {user.role === 'ADMIN' ? 'Make User' : 'Make Admin'}
-      </>
-    )}
-  </Button>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm flex items-center gap-3">
+                        {/* Role Toggle */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => toggleUserRole(user)}
+                          disabled={togglingId === user.id || togglingStatusId === user.id}
+                          className="min-w-[140px] gap-1.5"
+                        >
+                          {togglingId === user.id ? (
+                            <>
+                              <UserCog className="h-4 w-4 animate-spin" />
+                              Updating…
+                            </>
+                          ) : (
+                            <>
+                              <UserCog className="h-4 w-4" />
+                              {user.role === "ADMIN" ? "Make User" : "Make Admin"}
+                            </>
+                          )}
+                        </Button>
 
-  {/* Status Toggle */}
-  <Button
-    variant={user.isActive ? "destructive" : "secondary"}
-    size="sm"
-    onClick={() => toggleUserStatus(user)}
-    disabled={togglingStatusId === user.id || togglingId === user.id}
-    className="min-w-[110px]"
-  >
-    {togglingStatusId === user.id ? (
-      <>
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-        Updating…
-      </>
-    ) : user.isActive ? (
-      'Deactivate'
-    ) : (
-      'Activate'
-    )}
-  </Button>
-</td>
+                        {/* Status Toggle */}
+                        <Button
+                          variant={user.isActive ? "destructive" : "secondary"}
+                          size="sm"
+                          onClick={() => toggleUserStatus(user)}
+                          disabled={togglingStatusId === user.id || togglingId === user.id}
+                          className="min-w-[110px]"
+                        >
+                          {togglingStatusId === user.id ? (
+                            <>
+                              <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                              Updating…
+                            </>
+                          ) : user.isActive ? (
+                            "Deactivate"
+                          ) : (
+                            "Activate"
+                          )}
+                        </Button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -415,7 +424,7 @@ export default function AdminUserList() {
                   <PaginationItem>
                     <PaginationPrevious
                       onClick={() => handlePageChange(page - 1)}
-                      className={cn(page === 0 && 'pointer-events-none opacity-50')}
+                      className={cn(page === 0 && "pointer-events-none opacity-50")}
                     />
                   </PaginationItem>
 
@@ -438,15 +447,16 @@ export default function AdminUserList() {
                   <PaginationItem>
                     <PaginationNext
                       onClick={() => handlePageChange(page + 1)}
-                      className={cn(meta.last && 'pointer-events-none opacity-50')}
+                      className={cn(meta.last && "pointer-events-none opacity-50")}
                     />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
 
               <div className="mt-3 text-center text-sm text-gray-600">
-                Showing <strong>{users.length}</strong> of <strong>{meta.totalElements}</strong> users
-                {' • '} Page <strong>{page + 1}</strong> of <strong>{meta.totalPages}</strong>
+                Showing <strong>{users.length}</strong> of <strong>{meta.totalElements}</strong>{" "}
+                users
+                {" • "} Page <strong>{page + 1}</strong> of <strong>{meta.totalPages}</strong>
               </div>
             </div>
           )}

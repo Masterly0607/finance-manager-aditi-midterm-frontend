@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-import { api } from '@/lib/api/client';
-import { Button } from '@/components/ui/button';
+import { api } from "@/lib/api/client";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -23,23 +23,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useToast } from '@/components/ui/use-toast'; // optional – nice feedback
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast"; // optional – nice feedback
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email' }),
-  passwordHash: z
-    .string()
-    .min(8, { message: 'Password must be at least 8 characters' }),
-  role: z.enum(['USER', 'ADMIN'], { required_error: 'Please select a role' }),
+  email: z.string().email({ message: "Please enter a valid email" }),
+  passwordHash: z.string().min(8, { message: "Password must be at least 8 characters" }),
+  role: z.enum(["USER", "ADMIN"], { required_error: "Please select a role" }),
   isActive: z.boolean().default(true),
 });
 
@@ -56,46 +54,45 @@ export function CreateUserModal({ onUserCreated }: CreateUserModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      passwordHash: '',
-      role: 'USER',
+      email: "",
+      passwordHash: "",
+      role: "USER",
       isActive: true,
     },
   });
 
-  const accessToken =
-    typeof window !== 'undefined' ? sessionStorage.getItem('ACCESS_TOKEN') : null;
+  const accessToken = typeof window !== "undefined" ? sessionStorage.getItem("ACCESS_TOKEN") : null;
 
   async function onSubmit(values: FormValues) {
     try {
       const response = await api(
-        '/api/admin/users',
+        "/api/admin/users",
         {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify(values),
         },
-        accessToken
+        accessToken,
       );
 
       if (response.success) {
-        toast?.({ title: 'Success', description: 'User created successfully' });
+        toast?.({ title: "Success", description: "User created successfully" });
         setOpen(false);
         form.reset();
         onUserCreated(); // refresh list
       } else {
         toast?.({
-          variant: 'destructive',
-          title: 'Error',
-          description: response.message || 'Failed to create user',
+          variant: "destructive",
+          title: "Error",
+          description: response.message || "Failed to create user",
         });
       }
     } catch (err: any) {
       toast?.({
-        variant: 'destructive',
-        title: 'Error',
-        description: err.message || 'Network error',
+        variant: "destructive",
+        title: "Error",
+        description: err.message || "Network error",
       });
-      console.error('Create user failed:', err);
+      console.error("Create user failed:", err);
     }
   }
 
@@ -136,11 +133,7 @@ export function CreateUserModal({ onUserCreated }: CreateUserModalProps) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter password (min 8 chars)"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Enter password (min 8 chars)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -192,7 +185,7 @@ export function CreateUserModal({ onUserCreated }: CreateUserModalProps) {
                 Cancel
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Creating...' : 'Create User'}
+                {form.formState.isSubmitting ? "Creating..." : "Create User"}
               </Button>
             </DialogFooter>
           </form>
