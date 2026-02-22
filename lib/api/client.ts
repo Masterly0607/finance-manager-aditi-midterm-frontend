@@ -35,6 +35,7 @@ export async function api<T>(
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...(options.headers || {}),
     },
+
     credentials: "include", //
   });
 
