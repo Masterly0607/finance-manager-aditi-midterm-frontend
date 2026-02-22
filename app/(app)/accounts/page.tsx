@@ -16,9 +16,15 @@ import { Label } from "@/components/ui/label"
 import { AccountCard } from "@/components/account-card"
 import { Plus } from "lucide-react"
 import { Account } from "@/lib/types"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createAccount, getAccounts, udpateAccount } from "@/lib/api/accounts"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { createAccount, udpateAccount } from "@/lib/api/accounts"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useAccounts } from "@/lib/hooks/transactions/useTransactions"
+
+type UpdateAccountInput = {
+  id: number;
+  name: string;
+};
 
 export default function AccountsPage() {
   const [addOpen, setAddOpen] = useState(false)
@@ -31,10 +37,7 @@ export default function AccountsPage() {
 
   const queryClient = useQueryClient();
 
-  const { data: accounts = [], isLoading } = useQuery({
-    queryKey: ["accounts"],
-    queryFn: getAccounts,
-  });
+  const { data: accounts = [], isLoading } = useAccounts();
 
   const createMutation = useMutation({
     mutationFn: createAccount,
@@ -47,7 +50,9 @@ export default function AccountsPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: udpateAccount,
+    mutationFn: ({ id, name }: UpdateAccountInput) =>
+      udpateAccount(id, { name }),
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setEditingAccount(null);
@@ -67,9 +72,10 @@ export default function AccountsPage() {
 
   function handleEdit() {
     if (!editingAccount || !editName.trim()) return;
+
     updateMutation.mutate({
-      id: editingAccount.id,
-      name: editName.trim(),
+      id: editingAccount.id,   // must pass the ID separately
+      name: editName.trim(),   // only name goes in body
     });
   }
 
@@ -80,16 +86,16 @@ export default function AccountsPage() {
   }, [])
 
   if (isLoading) return (
-  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {Array.from({ length: 3 }).map((_, i) => (
-      <div key={i} className="rounded-lg border p-6 flex flex-col gap-3">
-        <Skeleton className="h-4 w-1/2" />
-        <Skeleton className="h-8 w-3/4" />
-        <Skeleton className="h-4 w-1/3" />
-      </div>
-    ))}
-  </div>
-)
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="rounded-lg border p-6 flex flex-col gap-3">
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+      ))}
+    </div>
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -149,7 +155,7 @@ export default function AccountsPage() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {accounts.map((account: Account) => (
+          {accounts.map((account) => (
             <AccountCard key={account.id} account={account} onEdit={openEdit} />
           ))}
         </div>
