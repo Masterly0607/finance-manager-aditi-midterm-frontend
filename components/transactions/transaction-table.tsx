@@ -42,7 +42,7 @@ export function TransactionTable({
   showUser = false,
   showAccount = true,
 }: TransactionTableProps) {
-  if (transactions.length === 0) {
+  if (!transactions || transactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12 text-center">
         <p className="text-sm text-muted-foreground">No transactions found.</p>
@@ -63,36 +63,55 @@ export function TransactionTable({
             <TableHead>Note</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {transactions.map((txn) => (
-            <TableRow key={txn.id}>
-              <TableCell className="text-muted-foreground">{txn.transactionDate}</TableCell>
-              {showUser && <TableCell className="text-muted-foreground">{txn.userEmail}</TableCell>}
-              {showAccount && (
-                <TableCell className="font-medium text-foreground">
-                  {txn.type === "TRANSFER"
-                    ? `${txn.fromAccountName} -> ${txn.toAccountName}`
-                    : txn.accountName}
+          {transactions.map((txn) => {
+            const isIncome = txn.type === "INCOME";
+            const isExpense = txn.type === "EXPENSE";
+            const isTransfer = txn.type === "TRANSFER";
+
+            const amountPrefix = isIncome ? "+" : isExpense ? "-" : "";
+            const amountColor = isIncome
+              ? "text-success"
+              : isExpense
+                ? "text-destructive"
+                : "text-foreground";
+
+            return (
+              <TableRow key={txn.id}>
+                <TableCell className="text-muted-foreground">
+                  {txn.transactionDate ?? txn.date}
                 </TableCell>
-              )}
-              <TableCell>
-                <Badge variant={typeBadgeVariant(txn.type)}>{txn.type}</Badge>
-              </TableCell>
-              <TableCell
-                className={`text-right font-medium ${
-                  txn.type === "INCOME"
-                    ? "text-success"
-                    : txn.type === "EXPENSE"
-                      ? "text-destructive"
-                      : "text-foreground"
-                }`}
-              >
-                {txn.type === "INCOME" ? "+" : txn.type === "EXPENSE" ? "-" : ""}
-                {formatCurrency(txn.amount)}
-              </TableCell>
-              <TableCell className="text-muted-foreground">{txn.note}</TableCell>
-            </TableRow>
-          ))}
+
+                {showUser && (
+                  <TableCell className="text-muted-foreground">{txn.userEmail ?? "-"}</TableCell>
+                )}
+
+                {showAccount && (
+                  <TableCell className="font-medium text-foreground">
+                    {isTransfer ? (
+                      <span>
+                        {txn.fromAccountName ?? "Unknown"} → {txn.toAccountName ?? "Unknown"}
+                      </span>
+                    ) : (
+                      txn.accountName
+                    )}
+                  </TableCell>
+                )}
+
+                <TableCell>
+                  <Badge variant={typeBadgeVariant(txn.type)}>{txn.type}</Badge>
+                </TableCell>
+
+                <TableCell className={`text-right font-medium ${amountColor}`}>
+                  {amountPrefix}
+                  {formatCurrency(txn.amount)}
+                </TableCell>
+
+                <TableCell className="text-muted-foreground">{txn.note}</TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

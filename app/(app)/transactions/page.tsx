@@ -33,13 +33,41 @@ export default function TransactionsPage() {
   });
   const { data: accounts = [] } = useAccounts();
 
+  const accountMap = new Map(accounts.map((a) => [String(a.id), a.name]));
+
+  const extractIdsFromNote = (note?: string): string[] => {
+    if (!note) return [];
+    return note.match(/\d+/g) ?? [];
+  };
+
   const transactions =
     data?.transactions.map((t) => {
-      const account = accounts.find((a) => String(a.id) === String(t.accountId));
+      let fromAccountName: string | undefined;
+      let toAccountName: string | undefined;
+      let updatedNote = t.note;
+
+      if (t.type === "TRANSFER") {
+        const ids = extractIdsFromNote(t.note);
+
+        if (ids.length >= 2) {
+          const fromId = ids[0];
+          const toId = ids[1];
+
+          fromAccountName = accountMap.get(fromId);
+          toAccountName = accountMap.get(toId);
+
+          if (fromAccountName && toAccountName) {
+            updatedNote = `Transfer from ${fromAccountName} to ${toAccountName}`;
+          }
+        }
+      }
 
       return {
         ...t,
-        accountName: account?.name ?? "Unknown",
+        accountName: accountMap.get(String(t.accountId)) ?? "Unknown",
+        fromAccountName,
+        toAccountName,
+        note: updatedNote,
       };
     }) ?? [];
   const currentPage = (data?.pagination?.page ?? 0) + 1;
