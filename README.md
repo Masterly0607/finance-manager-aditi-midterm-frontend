@@ -111,6 +111,7 @@ This project was developed as a team assignment.
 | **Raksa** | Accounts | Create account, View list, Update account |
 | **Chhai** | Transactions & Transfers | Income/Expense CRUD, Transfer between accounts |
 | **Narin** | Admin Panel | View users, Toggle role (USER ↔ ADMIN), Monitor transactions |
+| **Heang** | Dashboard | View statistics, Monitor system overview, Display summary charts |
 
 ---
 
