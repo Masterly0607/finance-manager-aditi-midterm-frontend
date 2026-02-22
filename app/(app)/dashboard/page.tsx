@@ -7,13 +7,11 @@ import { getDashboardSummary, mockMonthlySummary, mockTransactions } from "@/lib
 import React from "react";
 
 function DashboardPage() {
-
   const summary = getDashboardSummary();
   const recentTransactions = mockTransactions
     .filter((t) => t.userId === "u1")
     .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 10)
-
+    .slice(0, 10);
 
   return (
     <div className="flex flex-col gap-6">
@@ -22,11 +20,11 @@ function DashboardPage() {
         <p className="text-sm text-muted-foreground">Your financial overview at a glance.</p>
       </div>
 
-      <SummaryCards data={summary}/>
+      <SummaryCards data={summary} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-          <MonthlyChart data={mockMonthlySummary} />
-          <Card>
+        <MonthlyChart data={mockMonthlySummary} />
+        <Card>
           <CardHeader>
             <CardTitle className="text-foreground">Recent Transactions</CardTitle>
           </CardHeader>
@@ -35,9 +33,7 @@ function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-
     </div>
-
   );
 }
 

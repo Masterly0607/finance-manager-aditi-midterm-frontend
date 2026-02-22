@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Table,
@@ -7,34 +7,34 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import type { Transaction } from "@/lib/types"
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import type { Transaction } from "@/lib/types";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(value)
+  }).format(value);
 }
 
 function typeBadgeVariant(type: string) {
   switch (type) {
     case "INCOME":
-      return "default" as const
+      return "default" as const;
     case "EXPENSE":
-      return "destructive" as const
+      return "destructive" as const;
     case "TRANSFER":
-      return "secondary" as const
+      return "secondary" as const;
     default:
-      return "outline" as const
+      return "outline" as const;
   }
 }
 
 interface TransactionTableProps {
-  transactions: Transaction[]
-  showUser?: boolean
-  showAccount?: boolean
+  transactions: Transaction[];
+  showUser?: boolean;
+  showAccount?: boolean;
 }
 
 export function TransactionTable({
@@ -47,7 +47,7 @@ export function TransactionTable({
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12 text-center">
         <p className="text-sm text-muted-foreground">No transactions found.</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -67,9 +67,7 @@ export function TransactionTable({
           {transactions.map((txn) => (
             <TableRow key={txn.id}>
               <TableCell className="text-muted-foreground">{txn.date}</TableCell>
-              {showUser && (
-                <TableCell className="text-muted-foreground">{txn.userEmail}</TableCell>
-              )}
+              {showUser && <TableCell className="text-muted-foreground">{txn.userEmail}</TableCell>}
               {showAccount && (
                 <TableCell className="font-medium text-foreground">
                   {txn.type === "TRANSFER"
@@ -98,5 +96,5 @@ export function TransactionTable({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

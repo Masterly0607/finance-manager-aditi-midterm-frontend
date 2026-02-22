@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Bar,
   BarChart,
@@ -10,8 +10,8 @@ import {
   XAxis,
   YAxis,
   Legend,
-} from "recharts"
-import type { MonthlySummary } from "@/lib/types"
+} from "recharts";
+import type { MonthlySummary } from "@/lib/types";
 
 export function MonthlyChart({ data }: { data: MonthlySummary[] }) {
   return (
@@ -24,11 +24,7 @@ export function MonthlyChart({ data }: { data: MonthlySummary[] }) {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-              <XAxis
-                dataKey="month"
-                tick={{ fontSize: 12 }}
-                className="fill-muted-foreground"
-              />
+              <XAxis dataKey="month" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
               <YAxis
                 tick={{ fontSize: 12 }}
                 className="fill-muted-foreground"
@@ -66,5 +62,5 @@ export function MonthlyChart({ data }: { data: MonthlySummary[] }) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
