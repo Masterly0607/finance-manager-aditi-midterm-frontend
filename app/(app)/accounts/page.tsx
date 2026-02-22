@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -16,53 +16,80 @@ import { Label } from "@/components/ui/label"
 import { AccountCard } from "@/components/account-card"
 import { Plus } from "lucide-react"
 import { Account } from "@/lib/types"
-import { mockAccounts } from "@/lib/mock-data"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { createAccount, getAccounts, udpateAccount } from "@/lib/api/accounts"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AccountsPage() {
-  const [accounts, setAccounts] = useState<Account[]>(mockAccounts)
   const [addOpen, setAddOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
 
-  // Add account form state
   const [newName, setNewName] = useState("")
   const [newBalance, setNewBalance] = useState("")
-
-  // Edit account form state
   const [editName, setEditName] = useState("")
 
+  const queryClient = useQueryClient();
+
+  const { data: accounts = [], isLoading } = useQuery({
+    queryKey: ["accounts"],
+    queryFn: getAccounts,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      setNewName("");
+      setNewBalance("");
+      setAddOpen(false);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: udpateAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      setEditingAccount(null);
+      setEditName("");
+      setEditOpen(false);
+    },
+  });
+
   function handleAdd() {
-    if (!newName.trim()) return
-    const newAccount: Account = {
-      id: `a${Date.now()}`,
-      userId: "u1",
+    if (!newName.trim()) return;
+
+    createMutation.mutate({
       name: newName.trim(),
       balance: parseFloat(newBalance) || 0,
-      createdAt: new Date().toISOString().split("T")[0],
-    }
-    setAccounts((prev) => [...prev, newAccount])
-    setNewName("")
-    setNewBalance("")
-    setAddOpen(false)
+    });
   }
 
   function handleEdit() {
-    if (!editingAccount || !editName.trim()) return
-    setAccounts((prev) =>
-      prev.map((a) =>
-        a.id === editingAccount.id ? { ...a, name: editName.trim() } : a
-      )
-    )
-    setEditingAccount(null)
-    setEditName("")
-    setEditOpen(false)
+    if (!editingAccount || !editName.trim()) return;
+    updateMutation.mutate({
+      id: editingAccount.id,
+      name: editName.trim(),
+    });
   }
 
-  function openEdit(account: Account) {
+  const openEdit = useCallback((account: Account) => {
     setEditingAccount(account)
     setEditName(account.name)
     setEditOpen(true)
-  }
+  }, [])
+
+  if (isLoading) return (
+  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {Array.from({ length: 3 }).map((_, i) => (
+      <div key={i} className="rounded-lg border p-6 flex flex-col gap-3">
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-8 w-3/4" />
+        <Skeleton className="h-4 w-1/3" />
+      </div>
+    ))}
+  </div>
+)
 
   return (
     <div className="flex flex-col gap-6">
@@ -122,7 +149,7 @@ export default function AccountsPage() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {accounts.map((account) => (
+          {accounts.map((account: Account) => (
             <AccountCard key={account.id} account={account} onEdit={openEdit} />
           ))}
         </div>

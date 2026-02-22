@@ -17,6 +17,16 @@ export interface Account {
   createdAt: string
 }
 
+export type CreateAccountDto = {
+  name: string;
+  balance: number;
+};
+
+export type UpdateAccountDto = {
+  id: string;
+  name: string;
+};
+
 export interface Transaction {
   id: string
   userId: string

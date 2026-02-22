@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { TopNavbar } from "@/components/top-navbar";
 import RequireAuth from "@/components/auth/RequireAuth";
+import Providers from "./providers";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <SidebarInset>
           <TopNavbar />
-          <div className="flex-1 overflow-auto p-4 md:p-6">{children}</div>
+          <Providers>{children}</Providers>
         </SidebarInset>
       </SidebarProvider>
     </RequireAuth>
