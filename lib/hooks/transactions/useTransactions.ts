@@ -7,7 +7,7 @@ import {
   BackendTransaction,
   TransactionsApiResponse,
 } from "../../types/transactions/transaction.types";
-import { Account } from "../../types/account.types";
+import { Account } from "@/lib/types";
 
 export function useTransactions(query: TransactionsQuery) {
   return useQuery<{ transactions: Transaction[]; pagination: Pagination }, Error>({

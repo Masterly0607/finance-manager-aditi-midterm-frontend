@@ -10,11 +10,20 @@ export interface User {
 }
 
 export interface Account {
-  id: string;
+  id: number;
   userId: string;
   name: string;
   balance: number;
   createdAt: string;
+}
+
+export interface CreateAccount {
+  name: string;
+  balance: number;
+}
+
+export interface UpdateAccount {
+  name: string;
 }
 
 export interface Transaction {
