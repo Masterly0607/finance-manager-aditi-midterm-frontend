@@ -7,7 +7,7 @@ export async function getAccounts() {
 
   const res = await fetch(`${BASE_URL}/api/accounts`, {
     headers: { Authorization: `Bearer ${token}` },
-      credentials: "include",
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -41,7 +41,7 @@ export async function udpateAccount(id: number, data: UpdateAccount) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      },
+      }
     },
     token,
   );
