@@ -20,9 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-// import { mockAccounts } from "@/lib/mock-data";
 import { Props } from "@/lib/types/transactions/add-income.types";
-import { TrendingUp } from "lucide-react";
 
 export function AddIncomeDialog({ open, onOpenChange, onSubmit, accounts }: Props) {
   const [accountId, setAccountId] = useState("");
@@ -54,7 +52,7 @@ export function AddIncomeDialog({ open, onOpenChange, onSubmit, accounts }: Prop
               </SelectTrigger>
               <SelectContent>
                 {accounts.map((a) => (
-                  <SelectItem key={a.id} value={a.id}>
+                  <SelectItem key={a.id} value={String(a.id)}>
                     {a.name}
                   </SelectItem>
                 ))}

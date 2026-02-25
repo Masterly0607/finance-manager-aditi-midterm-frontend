@@ -79,7 +79,7 @@ export default function TransactionsPage() {
 
   if (!data) return null;
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 p-6">
       <TransactionsHeader
         onAddIncome={() => setIncomeOpen(true)}
         onAddExpense={() => setExpenseOpen(true)}

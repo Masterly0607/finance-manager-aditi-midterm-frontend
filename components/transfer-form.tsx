@@ -30,8 +30,8 @@ interface TransferFormProps {
 }
 
 export function TransferForm({ accounts, onTransfer, isLoading }: TransferFormProps) {
-  const [fromId, setFromId] = useState("");
-  const [toId, setToId] = useState("");
+  const [fromId, setFromId] = useState<number | undefined>(undefined);
+  const [toId, setToId] = useState<number | undefined>(undefined);
   const [amount, setAmount] = useState<string>("");
   const [note, setNote] = useState("");
   const [success, setSuccess] = useState(false);
@@ -81,7 +81,7 @@ export function TransferForm({ accounts, onTransfer, isLoading }: TransferFormPr
           <div className="flex gap-4">
             <div className="flex flex-col gap-2 w-full">
               <Label>From Account</Label>
-              <Select value={fromId} onValueChange={setFromId}>
+              <Select value={fromId?.toString()} onValueChange={(val) => setFromId(Number(val))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select source account" />
                 </SelectTrigger>
@@ -96,7 +96,7 @@ export function TransferForm({ accounts, onTransfer, isLoading }: TransferFormPr
             </div>
             <div className="flex flex-col gap-2 w-full">
               <Label>To Account</Label>
-              <Select value={toId} onValueChange={setToId}>
+              <Select value={toId?.toString()} onValueChange={(val) => setToId(Number(val))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select destination account" />
                 </SelectTrigger>

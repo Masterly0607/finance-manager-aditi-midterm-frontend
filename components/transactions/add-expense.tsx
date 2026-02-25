@@ -58,7 +58,7 @@ export function AddExpenseDialog({ open, onOpenChange, onSubmit, accounts }: Pro
               </SelectTrigger>
               <SelectContent>
                 {accounts.map((a) => (
-                  <SelectItem key={a.id} value={a.id}>
+                  <SelectItem key={a.id} value={String(a.id)}>
                     {a.name}
                   </SelectItem>
                 ))}

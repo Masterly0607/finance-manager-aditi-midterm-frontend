@@ -236,7 +236,7 @@ export default function AdminUserList() {
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
 

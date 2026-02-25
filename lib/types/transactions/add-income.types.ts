@@ -1,4 +1,6 @@
-import { Account } from "../account.types";
+// import { Account } from "../account.types";
+
+import { Account } from "@/lib/types";
 
 export type IncomeForm = {
   accountId: string;
