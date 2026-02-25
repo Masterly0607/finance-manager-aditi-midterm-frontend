@@ -1,40 +1,60 @@
-import { MonthlyChart } from "@/components/monthly-chart";
+"use client";
+
 import { SummaryCards } from "@/components/summary-cards";
 import { TransactionTable } from "@/components/transaction-table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDashboardSummary, mockMonthlySummary, mockTransactions } from "@/lib/mock/mock-data";
+import { MonthlyChart } from "@/components/monthly-chart";
 
-import React from "react";
+import { useDashboardSummary } from "@/lib/hooks/dashboard/useDashboardSummary";
+import { useAccounts, useTransactions } from "@/lib/hooks/transactions/useTransactions";
+import { generateMonthlyData } from "@/lib/generateMonthly";
 
-function DashboardPage() {
-  const summary = getDashboardSummary();
-  const recentTransactions = mockTransactions
-    .filter((t) => t.userId === "u1")
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 10);
+export default function DashboardPage() {
+  const { summary, loading: summaryLoading } = useDashboardSummary();
+
+  const { data: transactionResponse, isLoading: transactionsLoading } = useTransactions({});
+
+  const allTransactions = transactionResponse?.transactions ?? [];
+  const { data: accounts = [] } = useAccounts();
+
+  // 1️⃣ Remove TRANSFER
+  const filteredTransactions = allTransactions.filter((tx) => tx.type !== "TRANSFER");
+
+  // 2️⃣ Attach account name
+  const transactionsWithAccount = filteredTransactions.map((t) => {
+    const account = accounts.find((a) => String(a.id) === String(t.accountId));
+
+    return {
+      ...t,
+      accountName: account?.name ?? "Unknown",
+    };
+  });
+
+  // 3️⃣ Sort by transaction date (newest first)
+  const sortedTransactions = [...transactionsWithAccount].sort((a, b) => {
+    const [dayA, monthA, yearA] = a.date.split("/");
+    const [dayB, monthB, yearB] = b.date.split("/");
+
+    const dateA = new Date(`${yearA}-${monthA}-${dayA}`).getTime();
+    const dateB = new Date(`${yearB}-${monthB}-${dayB}`).getTime();
+
+    return dateB - dateA;
+  });
+
+  // 4️⃣ Take only 5 most recent
+  const recentTransactions = sortedTransactions.slice(0, 5);
+
+  // 5️⃣ Chart data
+  const monthlyData = generateMonthlyData(filteredTransactions);
+
+  if (summaryLoading || transactionsLoading) {
+    return <div className="p-6">Loading...</div>;
+  }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Your financial overview at a glance.</p>
-      </div>
-
-      <SummaryCards data={summary} />
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <MonthlyChart data={mockMonthlySummary} />
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-foreground">Recent Transactions</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <TransactionTable transactions={recentTransactions} />
-          </CardContent>
-        </Card>
-      </div>
+    <div className="p-6 space-y-6">
+      {summary && <SummaryCards data={summary} />}
+      <MonthlyChart data={monthlyData} />
+      <TransactionTable transactions={recentTransactions} />
     </div>
   );
 }
-
-export default DashboardPage;
