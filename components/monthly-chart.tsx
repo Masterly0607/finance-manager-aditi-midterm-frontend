@@ -14,6 +14,7 @@ import {
 import type { MonthlySummary } from "@/lib/types";
 
 export function MonthlyChart({ data }: { data: MonthlySummary[] }) {
+  console.log({ data });
   return (
     <Card>
       <CardHeader>

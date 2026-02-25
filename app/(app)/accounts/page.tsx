@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useCallback, useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useCallback, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,16 +10,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { AccountCard } from "@/components/account-card"
-import { Plus } from "lucide-react"
-import { Account } from "@/lib/types"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createAccount, udpateAccount } from "@/lib/api/accounts"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useAccounts } from "@/lib/hooks/transactions/useTransactions"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AccountCard } from "@/components/account-card";
+import { Plus } from "lucide-react";
+import { Account } from "@/lib/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createAccount, udpateAccount } from "@/lib/api/accounts";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAccounts } from "@/lib/hooks/transactions/useTransactions";
 
 type UpdateAccountInput = {
   id: number;
@@ -27,13 +27,13 @@ type UpdateAccountInput = {
 };
 
 export default function AccountsPage() {
-  const [addOpen, setAddOpen] = useState(false)
-  const [editOpen, setEditOpen] = useState(false)
-  const [editingAccount, setEditingAccount] = useState<Account | null>(null)
+  const [addOpen, setAddOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
-  const [newName, setNewName] = useState("")
-  const [newBalance, setNewBalance] = useState("")
-  const [editName, setEditName] = useState("")
+  const [newName, setNewName] = useState("");
+  const [newBalance, setNewBalance] = useState("");
+  const [editName, setEditName] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -50,8 +50,7 @@ export default function AccountsPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, name }: UpdateAccountInput) =>
-      udpateAccount(id, { name }),
+    mutationFn: ({ id, name }: UpdateAccountInput) => udpateAccount(id, { name }),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
@@ -74,28 +73,29 @@ export default function AccountsPage() {
     if (!editingAccount || !editName.trim()) return;
 
     updateMutation.mutate({
-      id: editingAccount.id,   // must pass the ID separately
-      name: editName.trim(),   // only name goes in body
+      id: editingAccount.id, // must pass the ID separately
+      name: editName.trim(), // only name goes in body
     });
   }
 
   const openEdit = useCallback((account: Account) => {
-    setEditingAccount(account)
-    setEditName(account.name)
-    setEditOpen(true)
-  }, [])
+    setEditingAccount(account);
+    setEditName(account.name);
+    setEditOpen(true);
+  }, []);
 
-  if (isLoading) return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="rounded-lg border p-6 flex flex-col gap-3">
-          <Skeleton className="h-4 w-1/2" />
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-4 w-1/3" />
-        </div>
-      ))}
-    </div>
-  )
+  if (isLoading)
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="rounded-lg border p-6 flex flex-col gap-3">
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-4 w-1/3" />
+          </div>
+        ))}
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-6 my-4 mx-4">
@@ -151,7 +151,9 @@ export default function AccountsPage() {
 
       {accounts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
-          <p className="text-muted-foreground">No accounts yet. Create your first account to get started.</p>
+          <p className="text-muted-foreground">
+            No accounts yet. Create your first account to get started.
+          </p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -189,5 +191,5 @@ export default function AccountsPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

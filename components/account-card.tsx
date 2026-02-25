@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Pencil, Wallet } from "lucide-react"
-import { Account } from "@/lib/types"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Pencil, Wallet } from "lucide-react";
+import { Account } from "@/lib/types";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(value)
+  }).format(value);
 }
 
 interface AccountCardProps {
-  account: Account
-  onEdit: (account: Account) => void
+  account: Account;
+  onEdit: (account: Account) => void;
 }
 
 export function AccountCard({ account, onEdit }: AccountCardProps) {
@@ -29,9 +29,7 @@ export function AccountCard({ account, onEdit }: AccountCardProps) {
             <CardTitle className="text-base font-semibold text-foreground">
               {account.name}
             </CardTitle>
-            <p className="text-xs text-muted-foreground">
-              Created {account.createdAt}
-            </p>
+            <p className="text-xs text-muted-foreground">Created {account.createdAt}</p>
           </div>
         </div>
         <Button variant="ghost" size="icon" onClick={() => onEdit(account)}>
@@ -40,10 +38,8 @@ export function AccountCard({ account, onEdit }: AccountCardProps) {
         </Button>
       </CardHeader>
       <CardContent>
-        <p className="text-2xl font-bold text-foreground">
-          {formatCurrency(account.balance)}
-        </p>
+        <p className="text-2xl font-bold text-foreground">{formatCurrency(account.balance)}</p>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -41,7 +41,7 @@ export async function udpateAccount(id: number, data: UpdateAccount) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      }
+      },
     },
     token,
   );
