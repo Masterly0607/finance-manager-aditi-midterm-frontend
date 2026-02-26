@@ -1,5 +1,3 @@
-// import { Account } from "../account.types";
-
 import { Account } from "@/lib/types";
 
 export type ExpenseForm = {
