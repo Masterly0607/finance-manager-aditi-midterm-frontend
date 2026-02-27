@@ -40,7 +40,7 @@ const cards = [
     bg: "bg-destructive/10",
   },
   {
-    title: "Net (Income - Expense)",
+    title: "Net",
     key: "net" as const,
     icon: Activity,
     color: "text-primary",

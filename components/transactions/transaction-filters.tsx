@@ -65,7 +65,7 @@ export function TransactionFilters(props: Props) {
       </div>
 
       <div className="flex flex-1 flex-col gap-2">
-        <Label className="text-xs text-muted-foreground">Search Note</Label>
+        <Label className="text-xs text-muted-foreground">Search</Label>
         <Input
           placeholder="Search..."
           value={props.searchNote}

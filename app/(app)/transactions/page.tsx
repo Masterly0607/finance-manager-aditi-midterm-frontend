@@ -11,6 +11,7 @@ import {
 import { TransactionTable } from "@/components/transactions/transaction-table";
 import { useAccounts, useTransactions } from "@/lib/hooks/transactions/useTransactions";
 import { useCreateTransaction } from "@/lib/hooks/transactions/useCreateTransaction";
+import { useDebounce } from "@/lib/hooks/transactions/useDebounce";
 
 const PAGE_SIZE = 8;
 
@@ -23,11 +24,12 @@ export default function TransactionsPage() {
 
   const [incomeOpen, setIncomeOpen] = useState(false);
   const [expenseOpen, setExpenseOpen] = useState(false);
+  const debouncedSearch = useDebounce(searchNote, 400);
 
   const { data, isLoading, error } = useTransactions({
     account: filterAccount,
     type: filterType,
-    search: searchNote,
+    search: debouncedSearch,
     page,
     pageSize: PAGE_SIZE,
   });
@@ -74,7 +76,7 @@ export default function TransactionsPage() {
   const totalPages = data?.pagination?.totalPage ?? 1;
   const totalItems = data?.pagination?.total ?? 0;
 
-  if (isLoading) return <p className="text-sm text-muted-foreground">Loading transactions…</p>;
+  // if (isLoading && !data) return <p className="text-sm text-muted-foreground">Loading transactions…</p>;
   if (error) return <p className="text-sm text-destructive">Failed to load transactions</p>;
 
   if (!data) return null;

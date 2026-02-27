@@ -1,6 +1,5 @@
 export function generateMonthlyData(transactions: any[]) {
   const monthlyMap: Record<number, { income: number; expense: number }> = {};
-
   transactions.forEach((tx) => {
     const date = new Date(tx.transactionDate || tx.date);
     if (isNaN(date.getTime())) return;

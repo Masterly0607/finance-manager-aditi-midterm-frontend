@@ -5,6 +5,7 @@ export interface TransactionsQuery {
   type?: string;
   search?: string;
   page?: number;
+  size?: number;
   pageSize?: number;
 }
 

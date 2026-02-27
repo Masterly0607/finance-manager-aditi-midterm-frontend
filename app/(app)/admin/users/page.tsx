@@ -98,7 +98,6 @@ export default function AdminUserList() {
       setError(err.message || "Network error while fetching users");
       console.error("Fetch users failed:", err);
     } finally {
-      // setLoading(false);
       setIsFiltering(false);
     }
   }, [page, roleFilter, sortBy, sortDir, accessToken]);

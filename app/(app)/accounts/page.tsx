@@ -73,8 +73,8 @@ export default function AccountsPage() {
     if (!editingAccount || !editName.trim()) return;
 
     updateMutation.mutate({
-      id: editingAccount.id, // must pass the ID separately
-      name: editName.trim(), // only name goes in body
+      id: editingAccount.id, 
+      name: editName.trim(),
     });
   }
 

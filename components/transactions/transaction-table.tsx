@@ -79,9 +79,7 @@ export function TransactionTable({
 
             return (
               <TableRow key={txn.id}>
-                <TableCell className="text-muted-foreground">
-                  {txn.transactionDate ?? txn.date}
-                </TableCell>
+                <TableCell className="text-muted-foreground">{txn.date}</TableCell>
 
                 {showUser && (
                   <TableCell className="text-muted-foreground">{txn.userEmail ?? "-"}</TableCell>
