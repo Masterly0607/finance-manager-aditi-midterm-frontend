@@ -19,6 +19,10 @@ Instead of writing fetch() everywhere, you write it once here and reuse it every
 */
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+if (!BASE_URL) {
+  throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
+}
+
 export async function api<T>(
   path: string,
   options: RequestInit = {},
@@ -31,6 +35,7 @@ export async function api<T>(
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...(options.headers || {}),
     },
+
     credentials: "include", //
   });
 

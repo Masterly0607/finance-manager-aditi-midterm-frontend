@@ -5,11 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 const TOKEN_KEY = "ACCESS_TOKEN";
 
-export default function RequireAuth({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 

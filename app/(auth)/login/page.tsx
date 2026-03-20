@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DollarSign, Loader2 } from "lucide-react";
@@ -19,8 +13,8 @@ import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function LoginPage() {
   const { login, isLoading } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin1@gmail.com");
+  const [password, setPassword] = useState("adminpass1");
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -50,9 +44,7 @@ export default function LoginPage() {
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
             <DollarSign className="h-6 w-6 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl font-bold text-foreground">
-            Welcome back
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-foreground">Welcome back</CardTitle>
           <CardDescription>Sign in to Finance Manager</CardDescription>
         </CardHeader>
         <CardContent>
@@ -96,10 +88,7 @@ export default function LoginPage() {
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               {"Don't have an account? "}
-              <Link
-                href="/register"
-                className="font-medium text-primary hover:underline"
-              >
+              <Link href="/register" className="font-medium text-primary hover:underline">
                 Register
               </Link>
             </p>
